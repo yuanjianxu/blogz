@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for blog in blogs: %}
+    {% if blog.id==blog_id: %}
+        <h1>{{blog.title}}</h1>
+    <p>{{blog.body}}</p>
+    {% endif %}    
+{% endfor %}
+
+{% endblock %}
