@@ -53,7 +53,7 @@ def login():
         if user:
             if user.password == password:
                 session['username'] = username
-                flash("Logged in")
+                flash(session['username']+" Logged in")
                 return render_template('newpost.html',title="newpost")
             else:
                 flash("User password incorrect")
@@ -111,14 +111,18 @@ def blog():
         blog_title = request.form['title']
         blog_body = request.form['body']
         if  blog_title!="" and blog_body!="":
-            new_blog = Blog(blog_title,blog_body,owner)
-            db.session.add(new_blog)
-            db.session.commit()
-            #blog_id=new_blog.id
-            #blogs = Blog.query.all()
-            users = User.query.all()
-            return render_template('blogpage.html',title="blogpage", blogs=new_blog,users=users)
-            #return render_template('blog.html',blog_id=int(blog_id), blogs=blogs,owner_name=session['username'])
+            if len(blog_title)<25 and len(blog_body)<300:
+                new_blog = Blog(blog_title,blog_body,owner)
+                db.session.add(new_blog)
+                db.session.commit()
+                blog_id=new_blog.id
+                blogs = Blog.query.filter_by(id=blog_id).all()
+                users = User.query.all()
+                return render_template('blogpage.html',title="blogpage", blogs=blogs,users=users)
+            else:
+                flash('entry title less than 25 and body less than 300!')
+                return render_template('newpost.html',title="newpost")
+
         else:
             flash('we need both a title and a body!')
             return render_template('newpost.html',title="newpost")
@@ -129,7 +133,8 @@ def blog():
         if user_id:
             blogs = Blog.query.filter_by(owner_id=user_id).all()
             users = User.query.all()
-            return render_template('blogs.html',title="blogs", blogs=blogs,users=users)
+            user = User.query.filter_by(id=user_id).first()
+            return render_template('blogs.html',title=user.username+"'blog", blogs=blogs,users=users)
         elif blog_id:
             blogs = Blog.query.filter_by(id=blog_id).all()
             users = User.query.all()
@@ -139,7 +144,7 @@ def blog():
 def list_blogs():
     blogs = Blog.query.all()
     users = User.query.all()
-    return render_template('list_blogs.html',title="list of blogs", blogs=blogs,users=users)
+    return render_template('blogs.html',title="all blogs", blogs=blogs,users=users)
 
 if __name__ == '__main__':
     app.run()
