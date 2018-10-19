@@ -3,33 +3,57 @@
     <head>
         <title>{{title}}</title>
         <style types='text/css'>
+            body { 
+                width:800px;margin:0 auto;
+                background-color:lightgrey;
+                }
             .error {
                 color: red;
-                font-style:italic;
+                font-size:18px
             }
-            h1{
-                text-align:center
-            }
+            
             li{
-                font-size:24px
-
+                font-size:22px
             }
             p{
-                font-size:24px
+                font-size:22px
+            }
+            tr{
+                font-size:20px
+            }
+            h1,h2,h3
+            {
+                color:green
 
             }
+            em{
+                font-size:16px;
+            }
+            
         </style>
     </head>
 <body>
-
-    <div>
-        <a href='/blog'>Main Blog Page</a>
-        <a href='/newpost'>Add a Blog Entry</a>
-    </div>
-
+    <br>
+    <table>
+        <tr>
+            <td width="8%"><a href='/'>home</a></td>
+            <td width="10%"><a href='/list_blogs'>all post</a></td>
+            <td width="10%"><a href='/newpost'>new post</a></td>
+            <td></td>
+            <td width="10%"><a href='/login'>login</a></td>
+            <td width="10%"><a href='/logout'>logout</a></td>
+        </tr>
+    </table>
 
     {% block content %}
     {% endblock %}
 
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    <ul>
+        {% for category,message in messages %}
+            <font color='red' ><li class="{{category}}">{{message}}</li></font>
+        {% endfor %}
+    </ul>
+    {% endwith %}
 </body>
 </html>
